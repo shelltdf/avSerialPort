@@ -18,3 +18,11 @@ SerialPort* SerialPort::create()
     return 0;
 }
 
+std::vector<std::string> SerialPort::getNames()
+{
+
+#if _WIN32
+    return getNamesWin32();
+#endif // _WIN32
+
+}

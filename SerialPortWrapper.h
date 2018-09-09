@@ -6,14 +6,16 @@
 void avSerialPortInit();
 void avSerialPortShutdown();
 
-int avSerialPortGetNamesCount();
-int avSerialPortGetNameSize(int id);
-int avSerialPortGetNameData(int id, char* name);
+int avSerialPortGetNames(char* str, int len);
 
-bool avSerialPortOpen(int id, const char* name, const char* str);
-void avSerialPortClose(int id);
-bool avSerialPortIsOpen(int id);
-bool avSerialPortRead(int id);
-bool avSerialPortSend(int id);
+//int avSerialPortGetNamesCount();
+//int avSerialPortGetNameSize(int index);
+//int avSerialPortGetNameData(int index, char* name);
+
+bool avSerialPortOpen(const char* name, const char* str);
+void avSerialPortClose(const char* name);
+bool avSerialPortIsOpen(const char* name);
+bool avSerialPortRead(const char* name, char* str, int len);
+bool avSerialPortSend(const char* name, char* str, int len);
 
 

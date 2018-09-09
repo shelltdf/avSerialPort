@@ -5,9 +5,11 @@ EXPORTS
 	avSerialPortInit
 	avSerialPortShutdown
 
-	avSerialPortGetNamesCount
-	avSerialPortGetNameSize
-	avSerialPortGetNameData
+	avSerialPortGetNames
+
+	;avSerialPortGetNamesCount
+	;avSerialPortGetNameSize
+	;avSerialPortGetNameData
 
     avSerialPortOpen
     avSerialPortClose

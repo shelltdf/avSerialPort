@@ -22,7 +22,7 @@ namespace avSerialPorts
         SerialPortWin32(void);
         ~SerialPortWin32(void);
 
-        std::vector<std::string> getNames()override;
+        //std::vector<std::string> getNames()override;
 
         ///连接端口
         bool connect(const char* comName, const char* com_sting) override;
@@ -95,27 +95,6 @@ namespace avSerialPorts
         disconnect();
     }
 
-    std::vector<std::string> SerialPortWin32::getNames()
-    {
-        std::vector<std::string> ret;
-
-        for (size_t i = 1; i <= 255; i++)
-        {
-            char name[32];
-            sprintf(name, "COM%d", i);
-            HANDLE h = CreateFileA(name
-                , GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING
-                , NULL, NULL);
-            if (h != INVALID_HANDLE_VALUE)
-            {
-                ret.push_back(name);
-                CloseHandle(h);
-            }
-        }
-
-        return ret;
-    }
-
     bool SerialPortWin32::connect(const char* comName, const char* com_sting)
     {
         //需要释放的指针
@@ -180,6 +159,7 @@ namespace avSerialPorts
 
         BOOL cce = ClearCommError(hcom, &error, &stat);
 
+
         // 缓冲区无数据
         if (stat.cbInQue <= 0)
         {
@@ -217,6 +197,11 @@ namespace avSerialPorts
                 }
             }
 
+            // 超过缓冲区
+            if (r_len > len)
+            {
+                return 0;
+            }
 
             //把接受到的数据放到pool中
             //for (unsigned int bi = 0; bi < r_len && r_len <= 1024; bi++)
@@ -257,6 +242,29 @@ namespace avSerialPorts
             return false;
         }
     }
+
+
+    std::vector<std::string> getNamesWin32()
+    {
+        std::vector<std::string> ret;
+
+        for (size_t i = 1; i <= 255; i++)
+        {
+            char name[32];
+            sprintf(name, "COM%d", i);
+            HANDLE h = CreateFileA(name
+                , GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING
+                , NULL, NULL);
+            if (h != INVALID_HANDLE_VALUE)
+            {
+                ret.push_back(name);
+                CloseHandle(h);
+            }
+        }
+
+        return ret;
+    }
+
 
 }//avSerialPorts
 

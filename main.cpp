@@ -57,15 +57,15 @@ int main()
 {
     std::cout << "start" << std::endl;
 
-    //open serial port
-    avSerialPorts::SerialPort* comm = avSerialPorts::SerialPort::create();
-
     //list names
-    std::vector<std::string> names = comm->getNames();
+    std::vector<std::string> names = avSerialPorts::SerialPort::getNames();
     for (size_t i = 0; i < names.size(); i++)
     {
         printf("-> %s\n", names[i].c_str());
     }
+
+    //new serial port
+    avSerialPorts::SerialPort* comm = avSerialPorts::SerialPort::create();
 
     //connect
     std::string com_name = names[names.size() - 1];

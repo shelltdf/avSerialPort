@@ -15,7 +15,7 @@ namespace avSerialPorts
 
         static SerialPort* create();
 
-        virtual std::vector<std::string> getNames() = 0;
+        static std::vector<std::string> getNames();
 
         //win32 comName ="COM1",com_sting = "9600,n,8,1"
         virtual bool connect(const char* comName, const char* com_sting) = 0;
