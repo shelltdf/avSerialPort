@@ -1,0 +1,17 @@
+LIBRARY
+; avSerialPort Wrapper DLL
+
+EXPORTS
+	avSerialPortInit
+	avSerialPortShutdown
+
+	avSerialPortGetNamesCount
+	avSerialPortGetNameSize
+	avSerialPortGetNameData
+
+    avSerialPortOpen
+    avSerialPortClose
+    avSerialPortIsOpen
+    avSerialPortRead
+    avSerialPortSend
+

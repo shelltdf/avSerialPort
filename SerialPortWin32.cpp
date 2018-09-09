@@ -22,19 +22,14 @@ namespace avSerialPorts
         SerialPortWin32(void);
         ~SerialPortWin32(void);
 
+        std::vector<std::string> getNames()override;
+
         ///连接端口
         bool connect(const char* comName, const char* com_sting) override;
 
-        virtual void disconnect()
-        {
-            if (hcom > 0)
-            {
-                CloseHandle(hcom);
-                hcom = 0;
-            }
-        }
+        virtual void disconnect()override;
 
-        virtual bool isConnected() { return hcom > 0; }
+        virtual bool isConnected()override { return hcom > 0; }
 
         int read(char* cr, int len) override;
 
@@ -100,6 +95,27 @@ namespace avSerialPorts
         disconnect();
     }
 
+    std::vector<std::string> SerialPortWin32::getNames()
+    {
+        std::vector<std::string> ret;
+
+        for (size_t i = 1; i <= 255; i++)
+        {
+            char name[32];
+            sprintf(name, "COM%d", i);
+            HANDLE h = CreateFileA(name
+                , GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING
+                , NULL, NULL);
+            if (h != INVALID_HANDLE_VALUE)
+            {
+                ret.push_back(name);
+                CloseHandle(h);
+            }
+        }
+
+        return ret;
+    }
+
     bool SerialPortWin32::connect(const char* comName, const char* com_sting)
     {
         //需要释放的指针
@@ -137,6 +153,15 @@ namespace avSerialPorts
         SetCommMask(hcom, EV_RXFLAG | EV_RXCHAR);
 
         return true;
+    }
+
+    void SerialPortWin32::disconnect()
+    {
+        if (hcom > 0)
+        {
+            CloseHandle(hcom);
+            hcom = 0;
+        }
     }
 
     int SerialPortWin32::read(char* buf, int len)

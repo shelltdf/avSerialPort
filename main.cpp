@@ -6,32 +6,17 @@ class parser
 {
 public:
     parser() {}
-
-    //头为0 尾为1024 包内5个int
-    std::string HEAD = "0";
-    std::string TAIL = "1024";
-    int SIZE = 5;
+    ~parser() {}
 
     std::vector<int> push(char* c, int len)
     {
-
         std::vector<int> ret;
 
         for (size_t i = 0; i < len; i++)
         {
-            //str.push_back(c[i]);
-            if (c[i] == '\r')
-            {
-            }
-            else if (c[i] == '\n')
-            {
-                STRLIST.push_back(STR);
-                STR.clear();
-            }
-            else
-            {
-                STR.push_back(c[i]);
-            }
+            if (c[i] == '\r') {}
+            else if (c[i] == '\n') { STRLIST.push_back(STR); STR.clear(); }
+            else { STR.push_back(c[i]); }
         }
 
         int index = 0;
@@ -58,6 +43,11 @@ public:
 
 private:
 
+    //头为0 尾为1024 包内5个int
+    std::string HEAD = "0";
+    std::string TAIL = "1024";
+    int SIZE = 5;
+
     std::string STR;
     std::vector<std::string> STRLIST;
 };
@@ -69,7 +59,20 @@ int main()
 
     //open serial port
     avSerialPorts::SerialPort* comm = avSerialPorts::SerialPort::create();
-    comm->connect("COM6", "9600,n,8,1");
+
+    //list names
+    std::vector<std::string> names = comm->getNames();
+    for (size_t i = 0; i < names.size(); i++)
+    {
+        printf("-> %s\n", names[i].c_str());
+    }
+
+    //connect
+    std::string com_name = names[names.size() - 1];
+    std::string com_str = "9600,n,8,1";
+    std::cout << "connect to " << com_name.c_str() << " " << com_str.c_str() << std::endl;
+    comm->connect(com_name.c_str(), com_str.c_str());
+    std::cout << "connected" << std::endl;
 
     //console
     // char line[2048+1] = {0};
@@ -90,7 +93,7 @@ int main()
     {
         if (!comm->isConnected())
         {
-            comm->connect("COM6", "9600,n,8,1");
+            comm->connect(com_name.c_str(), com_str.c_str());
         }
 
         int rn = comm->read(read_string, 2048);
@@ -116,7 +119,7 @@ int main()
             {
                 printf("%d ", l[i]);
             }
-            printf("\n");
+            if (l.size() > 0) printf("\n");
 
         }
     }
